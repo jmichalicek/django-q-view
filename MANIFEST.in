@@ -1,0 +1,8 @@
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include HISTORY.rst
+include LICENSE
+include README.rst
+recursive-include django_q_view/templates *
+recursive-include django_q_view/static *
+recursive-include docs *

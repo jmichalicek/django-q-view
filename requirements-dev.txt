@@ -1,0 +1,17 @@
+bumpversion
+wheel
+Django>=3.2
+twine
+python-magic
+
+pyupgrade
+django-upgrade
+
+djhtml>=1.4.5
+flake8
+flake8-django
+black
+isort
+mypy
+typing-extensions
+django-stubs

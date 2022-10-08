@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<title>{% block 'title' %}Django Q View{% endblock 'title' %}</title>
+    {% block 'css' %}{% endblock 'css' %}
+
+    {% block javascript %}
+      <script async src="https://unpkg.com/htmx.org@1.3.1" integrity="sha384-fIzHaKYVrEFxI4/dWpMzf9tlIUPU0HmW8w/8s4nQHvZmGQhXhnEM6aenC6QFkd7e" crossorigin="anonymous"></script>
+    {% endblock javascript %}
+  </head>
+	<body>
+		{% block 'body' %}
+			{% block 'main' %}{% endblock 'main' %}
+      {% block body_javascript %}{% endblock body_javascript %}
+		{% endblock 'body' %}
+	</body>
+</html>
