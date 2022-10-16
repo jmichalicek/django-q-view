@@ -80,7 +80,12 @@ migrate:
 	python manage.py migrate
 
 dev:
-	docker-compose run --service-ports django /bin/bash
+	docker compose run --service-ports django /bin/bash
 
 install-q-view:
-	pip install -e /django/q_view --no-binary :all:
+	pip install -e . --no-binary :all:
+
+	shell docker compose exec django bash
+
+djhtml:
+	find . -path ./.venv -prune -o -path node_modules -prune -o -wholename '*/templates*.html' -exec djhtml -t2 -i '{}' +

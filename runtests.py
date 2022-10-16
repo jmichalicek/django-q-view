@@ -31,7 +31,6 @@ try:
                 'context_processors': []
             }
         }],
-        EMAIL_BACKEND='django_q_view.backends.locmem.EmailBackend',
         CACHES={
             'default': {
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
