@@ -51,5 +51,5 @@ docs/_build
 .python-version
 .venv
 
-test_project/q_view_attachments
 .test_media_root/
+.vscode

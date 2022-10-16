@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Django Q View</title>
+  </head>
+  <body>
+    <div>
+      <h1>{{ queue_name}}: {{ broker.info }}</h1>
+      <h2>Clusters</h2>
+      {% for cluster in clusters %}
+        <h3>{{ cluster.cluster_id }}</h3>
+        <p>Cluster Stats</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th><th>Host</th><th>PID</th><th>Uptime</th><th>Queue Size</th><th>Total Results</th><th>Worker Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ cluster.status }}</td>
+              <td>{{ cluster.host }}</td>
+              <td>{{ cluster.pid }}</td>
+              <td>{{ cluster.uptime }}</td>
+              <td>{{ cluster.queue_size }}</td>
+              <td>{{ cluster.total_results }}</td>
+              <td>{{ cluster.worker_count }}</td>
+            </tr>
+          </tbody>
+        </table>
+      {% endfor %}
+    </div>
+  </body>
+</html>

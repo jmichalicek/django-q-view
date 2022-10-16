@@ -36,7 +36,7 @@ setup(
     url='https://github.com/jmichalicek/django-q-view',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=[],
+    install_requires=['django-q'],
     license="MIT",
     zip_safe=False,
     keywords=['django-q-view', 'django', 'email',],
