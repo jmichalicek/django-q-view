@@ -1,22 +1,29 @@
 <html>
   <head>
-    <title>Django Q View</title>
+    <title>Django Q View - Queue Info {{ queue_name }}</title>
   </head>
   <body>
     <div>
-      <h1>{{ queue_name}}: {{ broker.info }}</h1>
+      <h1>Queue: {{ queue_name}}</h1>
+      <h2>Stats</h2>
+      <table>
+        <tr><th>Broker</th><td>{{ broker.info }}</td></tr>
+        <tr><th>Cluster Count</th><td>{{ queue_data.cluster_count }}</td></tr>
+        <tr><th>Queue Size</th><td>{{ queue_data.queue_size }}</td></tr>
+        <tr><th>Total Results</th><td>{{ queue_data.total_results }}</td></tr>
+      </table>
       <h2>Clusters</h2>
-      {% for cluster in clusters %}
-        <h3>{{ cluster.cluster_id }}</h3>
-        <p>Cluster Stats</p>
-        <table>
-          <thead>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>ID</th><th>Status</th><th>Host</th><th>PID</th><th>Uptime</th><th>Queue Size</th><th>Total Results</th><th>Worker Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cluster in queue_data.clusters %}
             <tr>
-              <th>Status</th><th>Host</th><th>PID</th><th>Uptime</th><th>Queue Size</th><th>Total Results</th><th>Worker Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
+              <td>{{ cluster.cluster_name }}</td>
+              <td>{{ cluster.cluster_id }}</td>
               <td>{{ cluster.status }}</td>
               <td>{{ cluster.host }}</td>
               <td>{{ cluster.pid }}</td>
@@ -25,9 +32,9 @@
               <td>{{ cluster.total_results }}</td>
               <td>{{ cluster.worker_count }}</td>
             </tr>
-          </tbody>
-        </table>
-      {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </body>
 </html>

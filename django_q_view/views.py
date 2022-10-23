@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypedDict
 
 from django.conf import settings
 from django.utils import timezone
@@ -10,34 +10,43 @@ from django_q import VERSION, models
 from django_q.brokers import Broker, get_broker
 from django_q.conf import Conf
 from django_q.status import Stat
+from django_q.humanhash import humanize
+from typing import TypedDict
 
+class QueueData(TemplateView):
+    """
+    Stats about a single queue on a broker
+    """
 
-class DjangoQBrokerData(TemplateView):
-    """
-    Data and stats for a broker
-    """
     template_name = "django_q_view/q_view.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         broker: Broker = self.get_broker()
-        clusters: list[dict[str, Any]] = self.get_broker_cluster_info(broker=broker)
-        return super().get_context_data(broker=broker, queue_name=Conf.PREFIX, clusters=clusters, **kwargs)
+        queue_data: dict[str, Any] = self.get_broker_cluster_info(broker=broker)
+        return super().get_context_data(broker=broker, queue_name=Conf.PREFIX, queue_data=queue_data, **kwargs)
 
     def get_broker(self) -> Broker:
         return get_broker()
 
-    def get_broker_cluster_info(self, broker: Broker) -> list[dict[str, Any]]:
+    def get_broker_cluster_info(self, broker: Broker) -> dict[str, Any]:
         stats: list[Stat] = Stat.get_all(broker=broker)
-        clusters: list(dict[str, Any]) = []
+        clusters: list[dict[str, Any]] = []
         # get the broker host/ip/etc from broker.connection?
+        data = {
+            "total_results": 0,
+            "queue_size": 0,
+            "cluster_count": 0,
+            "clusters": [],
+        }
         for cluster_stats in stats:
             # for each instance of manage.py qcluster on the same queue there will be a Stat object here
             stats_dict = {
                 "cluster_id": cluster_stats.cluster_id,
+                "cluster_name": humanize(cluster_stats.cluster_id.hex),
                 "status": cluster_stats.status,
                 "host": cluster_stats.host,
                 "pid": cluster_stats.pid,
-                #"uptime": cluster_stats.uptime(),  this is just seconds as a float
+                # "uptime": cluster_stats.uptime(),  this is just seconds as a float
                 "queue_size": cluster_stats.task_q_size,
                 "total_results": cluster_stats.done_q_size,
                 "uptime": timezone.now() - cluster_stats.tob,  # uptime as a timedelta
@@ -45,5 +54,10 @@ class DjangoQBrokerData(TemplateView):
                 # goes on the broker"lock_size":
             }
             clusters.append(stats_dict)
+            data["queue_size"] += stats_dict["queue_size"]
+            data["total_results"] += stats_dict["total_results"]
 
-        return clusters
+        data["clusters"] = clusters
+        data["cluster_count"] = len(data["clusters"])
+
+        return data
