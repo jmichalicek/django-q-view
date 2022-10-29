@@ -23,6 +23,7 @@ class QueueData(TemplateView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         broker: Broker = self.get_broker()
         queue_data: dict[str, Any] = self.get_broker_cluster_info(broker=broker)
+        self.get_queue_tasks(broker)
         return super().get_context_data(broker=broker, queue_name=Conf.PREFIX, queue_data=queue_data, **kwargs)
 
     def get_broker(self) -> Broker:
@@ -61,3 +62,8 @@ class QueueData(TemplateView):
         data["cluster_count"] = len(data["clusters"])
 
         return data
+
+    def get_queue_tasks(self, broker: Broker):
+        stats: list[Stat] = Stat.get_all(broker=broker)
+        for cluster in stats:
+            print(dir(cluster.sentinel))
