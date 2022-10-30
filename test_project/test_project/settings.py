@@ -144,7 +144,7 @@ Q_CLUSTER = {
     "workers": 1,
     "cached": 60,  # https://django-q.readthedocs.io/en/latest/configure.html#cached
     "recycle": 500,
-    "timeout": 5,  # The number of seconds a worker is allowed to spend on a task before it’s terminated.
+    "timeout": 60,  # The number of seconds a worker is allowed to spend on a task before it’s terminated.
     "retry": 60,  # The number of seconds a broker will wait for a cluster to finish a task, before it’s presented again.
     "catch_up": False,
     "label": "Django Q",

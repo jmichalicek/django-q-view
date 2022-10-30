@@ -35,6 +35,46 @@
           {% endfor %}
         </tbody>
       </table>
+      <h2>Queued Tasks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Function</th><th>Args</th><th>Kwargs</th><th>Started</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task_id, task_data in queued_tasks.items %}
+            <tr>
+              <td>{{ task_data.id }}</td>
+              <td>{{ task_data.name }}</td>
+              <td>{{ task_data.func }}</td>
+              <td>{{ task_data.args|default:"" }}</td>
+              <td>{{ task_data.kwargs|default:""}}</td>
+              <td>{{ task_data.started }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h2>Executing Tasks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Function</th><th>Args</th><th>Kwargs</th><th>Started</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task_id, task_data in executing_tasks.items %}
+            <tr>
+              <td>{{ task_data.id }}</td>
+              <td>{{ task_data.name }}</td>
+              <td>{{ task_data.func }}</td>
+              <td>{{ task_data.args|default:"" }}</td>
+              <td>{{ task_data.kwargs|default:""}}</td>
+              <td>{{ task_data.started }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
