@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import Any, TypedDict
 
 from django.conf import settings
@@ -9,9 +10,12 @@ from django.views.generic import TemplateView
 from django_q import VERSION, models
 from django_q.brokers import Broker, get_broker
 from django_q.conf import Conf
-from django_q.status import Stat
 from django_q.humanhash import humanize
-from typing import TypedDict
+from django_q.status import Stat
+
+from django_q_view import backends
+from django_q_view.backends import RedisBackend
+
 
 class QueueData(TemplateView):
     """
@@ -23,8 +27,16 @@ class QueueData(TemplateView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         broker: Broker = self.get_broker()
         queue_data: dict[str, Any] = self.get_broker_cluster_info(broker=broker)
-        self.get_queue_tasks(broker)
-        return super().get_context_data(broker=broker, queue_name=Conf.PREFIX, queue_data=queue_data, **kwargs)
+        queued_tasks = self.get_queue_tasks(broker)
+        executing_tasks = self.get_executing_tasks(broker)
+        return super().get_context_data(
+            broker=broker,
+            queue_name=Conf.PREFIX,
+            queue_data=queue_data,
+            queued_tasks=queued_tasks,
+            executing_tasks=executing_tasks,
+            **kwargs,
+        )
 
     def get_broker(self) -> Broker:
         return get_broker()
@@ -63,7 +75,16 @@ class QueueData(TemplateView):
 
         return data
 
-    def get_queue_tasks(self, broker: Broker):
-        stats: list[Stat] = Stat.get_all(broker=broker)
-        for cluster in stats:
-            print(dir(cluster.sentinel))
+    def get_queue_tasks(self, broker: Broker) -> dict[str, Any]:
+        backend = RedisBackend(broker=broker)
+        tasks = {}
+        for k, v in backend.get_queued_tasks().items():
+            tasks[k] = json.loads(v)
+        return tasks
+
+    def get_executing_tasks(self, broker: Broker) -> dict[str, Any]:
+        backend = RedisBackend(broker=broker)
+        tasks = {}
+        for k, v in backend.get_executing_tasks().items():
+            tasks[k.decode('utf-8')] = json.loads(v)
+        return tasks
