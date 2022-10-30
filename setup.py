@@ -36,7 +36,7 @@ setup(
     url='https://github.com/jmichalicek/django-q-view',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=['django-q'],
+    install_requires=['django-q2'],
     license="MIT",
     zip_safe=False,
     keywords=['django-q-view', 'django', 'email',],
@@ -45,6 +45,7 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 3.2',
         'Framework :: Django :: 4.0',
+        'Framework :: Django :: 4.1',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -53,5 +54,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
 )
